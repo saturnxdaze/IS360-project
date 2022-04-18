@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Temperature Calculator</title>
+    <link id="currentStyle" href="./css/global.css" rel="stylesheet" />
+
+    <script>
+        let inputF = null;
+        let spnoutC = null;
+
+        let inputC = null;
+        let spnoutF = null;
+
+        let inputD = null;
+        let inputRH = null;
+        let spnoutD = null;
+
+        function bodyOnLoad() {
+            inputF = document.getElementById("txtInputF");
+            spnoutC = document.getElementById("spnOutput");
+
+            inputC = document.getElementById("txtInputC");
+            spnoutF = document.getElementById("spncOutput");
+
+            inputD = document.getElementById("txtInputD");
+            inputRH = document.getElementById("txtInputRH");
+            spnoutD = document.getElementById("spnOutputD");
+        }
+
+        function btnFClick() {
+            let outputNum;
+            let outputString;
+
+            let tempF = parseFloat(inputF.value);
+
+            if (!isNaN(tempF)) {
+                outputNum = (tempF - 32) * 5 / 9;
+                outputString = inputF.value + " Fahrenheit (F) is  " + outputNum.toFixed(2) + " (C)";
+            }
+            else {
+                outputString = "Input not a valid number.";
+            }
+            spnoutC.innerHTML = outputString;
+        }
+
+        function btncClick() {
+            let outputC;
+            let outputstringC;
+
+            let tempC = parseFloat(inputC.value);
+
+            if (!isNaN(tempC)) {
+                outputC = ((tempC * (9 / 5)) + 32);
+                outputstringC = inputC.value + " Celsius (C) is " + outputC.toFixed(2) + " (F)";
+            }
+            else {
+                outputstringC = "Input not a valid number.";
+            }
+            spnoutF.innerHTML = outputstringC;
+        }
+
+        function btnDClick() {
+            let outputD;
+            let outputstringD;
+
+            let tempD = parseFloat(inputD.value);
+            let tempRH = parseFloat(inputRH.value);
+
+            outputD = (tempD - ((100 - tempRH) / 5));
+
+            outputstringD = "Dew Point at Temp " + inputD.value + " with " + inputRH.value + "% Relative Humidity is: " + outputD;
+            spnOutputD.innerHTML = outputstringD; 
+        }
+    </script>
+</head>
+
+<body onload="bodyOnLoad()">
+
+    <a href="./index.html">Home Page</a>
+    <a href="./calculator.html">Temperature Calculator</a>
+    <a href="./about.html">About Page</a>
+
+    <h1>Temperature and Dew Point Calculator</h1>
+
+    <h2>Enter Input</h2>
+
+    <label for="txtInputF">Enter Temperature (F)</label>
+    <input id="txtInputF" type="text" />
+    <input type="button" value="Calculate" onclick="btnFClick()" />
+    <br />
+    <br />
+
+    <label for="txtInputC">Enter Temperature (C)</label>
+    <input id="txtInputC" type="text" />
+    <input type="button" value="Calculate" onclick="btncClick()" />
+    <br />
+    <br />
+
+    <label for="txtInputD">Enter Temperature</label>
+    <input id="txtInputD" type="text" />
+    <label for="txtInputRH"> Enter Relative Humidity (%)</label>
+    <input id="txtInputRH" type="text" />
+    <input type="button" value="Calculate" onclick="btnDClick()" />
+
+    <h2>Results:</h2>
+    <span id="spnOutput"></span>
+    <br />
+    <br />
+    <span id="spncOutput"></span>
+    <br />
+    <br />
+    <span id="spnOutputD"></span>
+
+    <script>let d = new Date();
+        document.write("<hr />");
+        document.write(d.toString());
+    </script>
+</body>
+</html>

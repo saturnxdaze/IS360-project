@@ -1,0 +1,14 @@
+﻿body {
+    background-color: grey;
+    font-family: Arial;
+    width: 1024px;
+    margin: auto;
+}
+
+h1 {
+    color: navy;
+}
+
+p {
+    color: whitesmoke;
+}
