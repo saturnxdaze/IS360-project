@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <title></title>
+    <style>
+        body {
+            margin: auto;
+            width: 1024px;
+            border-width: 2px;
+            border-left: solid;
+            border-right: solid;
+            font-family: Arial;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        textarea {
+            width: 800px;            
+        }
+    </style>
+    <script>
+        let req = XMLHttpRequest;
+
+        function btnNWSGetStationsSync_Click() {
+            var base_uri = "https://w1.weather.gov/xml/current_obs/index.xml";
+            req = new XMLHttpRequest();
+            req.open("GET", base_uri, false);
+            req.setRequestHeader(
+                "Accept", "text / html, application / xhtml + xml, application / xml; q = 0.9,*/*;q=0.8");
+            req.send();
+
+            let MyText = req.responseText;
+            let MyXML = req.responseXML;
+
+            let txtRawOutput = null;
+            txtRawOutput = document.getElementById("txtRawOutput");
+            txtRawOutput.innerHTML = MyText;
+        }
+
+    </script>
+</head>
+<body>
+    <h1>Synchronous Request</h1>
+    <input type="button" 
+           onclick="btnNWSGetStationsSync_Click()"
+           value="Get Stations - XML - Sync" />
+    <br /><br />
+    <textarea rows="50" id="txtRawOutput"></textarea>
+</body>
+</html>
+<!-- 50 -->

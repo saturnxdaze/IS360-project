@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Async Request Raw</title>
+    <style>
+        body {
+            margin: auto;
+            width: 1024px;
+            border-width: 2px;
+            border-left: solid;
+            border-right: solid;
+            font-family: Arial;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        textarea {
+            width: 800px;
+        }
+    </style>
+    <script>
+        let req = XMLHttpRequest;
+
+        function btnNWSGetStationsAsync_Click() {
+            var base_uri = "https://w1.weather.gov/xml/current_obs/index.xml";
+            req = new XMLHttpRequest();
+            req.open("GET", base_uri, true);
+            req.setRequestHeader(
+                "Accept", "text / html, application / xhtml + xml, application / xml; q = 0.9,*/*;q=0.8");
+            req.onreadystatechange = GetStationRawAjaxCallback;
+            req.send();
+        } 
+
+        function GetStationRawAjaxCallback() {
+            let spnReadyState = document.getElementById("spnReadyState");
+            switch (this.readyState) {
+                case 0:
+                    spnReadyState.innerHTML += "readyState is UNSENT.";
+                    break;
+                case 1:
+                    spnReadyState.innerHTML += "readyState is OPENED.";
+                    break;
+                case 2:
+                    spnReadyState.innerHTML += "readyState is HEADERS_RECEIVED.";
+                    break;
+                case 3:
+                    spnReadyState.innerHTML += "readyState is LOADING.";
+                    break;
+                case 4:
+                    spnReadyState.innerHTML += "readyState is DONE.";
+                    break;
+                default:
+                    spnReadyState.innerHTML += "readyState has run amok. This should never happen.";
+                    break;
+            }
+
+            if (this.readyState == 4 && this.status == 200) {
+
+                let MyText = req.responseText;
+                let MyXML = req.responseXML;
+
+                let txtRawOutput = null;
+                txtRawOutput = document.getElementById("txtRawOutput");
+                txtRawOutput.innerHTML = MyText;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Asynchronous Request</h1>
+    <input type="button"
+           onclick="btnNWSGetStationsAsync_Click()"
+           value="Get Stations - XML - Sync" />
+    <span id="spnReadyState"></span>
+    <br /><br />
+    <textarea rows="50" id="txtRawOutput"></textarea>
+</body>
+</html>
+<!-- 60 70 80 -->

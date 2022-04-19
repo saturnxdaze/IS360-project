@@ -14,6 +14,15 @@
     <None Include="css\global.css" />
     <None Include="calculator.html" />
     <None Include="about.html" />
+    <None Include="scripts\script.js" />
+    <None Include="scripts\validation.js" />
+    <None Include="scripts\NodeUtilLib.js" />
+    <None Include="scripts\WeatherLib.js" />
+    <None Include="RequestAsyncXMLListV2.html" />
+    <None Include="RequestAsyncXMLList.html" />
+    <None Include="RequestAsyncXMLRaw.html" />
+    <None Include="RequestSyncXMLRaw.html" />
+    <None Include="test.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="css\" />

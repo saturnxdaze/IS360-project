@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <title></title>
+    <script src="./js/WeatherLib.js"></script>
+
+    <style>
+        h1 {
+            color: maroon;
+        }
+    </style>
+    <script>
+        let req = XMLHttpRequest;
+        let numbers = [100, 200, 300];
+        let stationList = [];
+
+        let stationTest = {
+            stationId: 'CWAV',
+            state: 'AB',
+            stationName: 'sundre',
+            latitude: 51.76667,
+            longitude: 114.6833,
+            xmlUrl: 'https://weather.gov/xml/current_obs/CWAV.xml'
+        };
+
+        let latArray = stationTest["latitude"];
+        let latDot = stationTest.latitude;
+
+        let stationTestPos = {
+            stationId: 'CWAV',
+            state: 'AB',
+            stationName: 'sundre',
+            position: {
+                latitude: 51.76667,
+                longitude: 114.6833
+            },
+            xmlUrl: 'https://weather.gov/xml/current_obs/CWAV.xml'
+        };
+
+        let latArrayPos = stationTestPos["position"]["latitude"];
+        let latDotPos = stationTestPos.position.latitude;
+        let latComboPos = stationTestPos["position"].latitude;
+
+
+        let stationsTest = [
+            {
+                stationId: 'CWAV',
+                state: 'AB',
+                stationName: 'sundre',
+                position: {
+                    latitude: 51.76667,
+                    longitude: -114.6833
+                },
+                xmlUrl: 'https://weather.gov/xml/current_obs/CWAV.xml'
+            },
+            {
+                stationId: 'CWBO',
+                state: 'AB',
+                stationName: 'Brooks',
+                position: {
+                    latitude: 50.55,
+                    longitude: -111.85
+                },
+                xmlUrl: 'https://weather.gov/xml/current_obs/CWBO.xml'
+            }
+        ];
+        let station0Id = stationsTest[0].id;
+        let station1Id = stationsTest[1].id;
+        let station0Lat = stationsTest[0].position.latitude;
+        let station0IdArrNot = stationsTest[0]["id"];
+        let station1IdArrNot = stationsTest[1]["id"];
+        let station0LatArrNot = stationsTest[0]["position"]["latitude"];
+
+
+        //        stationList.push(station);
+        //let station2 = { id: 'KAAb', url: 'http:\\for.bar2' };
+        //stationList.push(station2);
+
+        //function getStation(stationid) {
+        //    return stationList.filter(function (o) { return o.id == stationid });
+        //}
+        // https://stackoverflow.com/questions/13964155/get-javascript-object-from-array-of-objects-by-value-of-property
+
+        // The following gets a list of weather stations synchronously. The data is returned as XML.
+        // Here, I demonstrate how to add the values to an unordered list. For each <station> element,
+        // I create a list item. It's a long list.
+        //
+        // Here is a reference to the service.
+        // https://w1.weather.gov/xml/current_obs/
+
+        function btnNWSGetStationsSync_Click() {
+            //
+
+            let s = getStation("KAAb");
+            let z = s;
+
+
+            var base_uri = "https://weather.gov/xml/current_obs/CWAV.xml";
+
+            // Here, the request is created. Constructor is called.
+            req = new XMLHttpRequest();
+
+            // Open the request synchronously using an HTTP GET.
+            req.open("GET", base_uri, true);
+
+            // The following header is significant. Something called CORS requires that we provide
+            // headers that tell the service the kinds of data we are willing to accept.
+            // These values are well - known MIME types. Here, we are saying that XML will be
+            // accepted from the Web Service.
+
+            req.setRequestHeader("Accept", "application/xml");
+            req.setRequestHeader("User-Agent", "PostmanRuntime/7.290");
+            //req.setRequestHeader("Accept", "text / html, application / xhtml + xml, application / xml; q = 0.9,*/*;q=0.8");
+            req.setRequestHeader("Access-Control-Allow-Origin", "*");
+            req.setRequestHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+            req.setRequestHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, Strict-Transport-Security");
+            req.setRequestHeader("Referrer-Policy", "no-referrer");
+            req.onreadystatechange = getStationsCallback;
+
+            // Send the request
+            req.send();
+
+            // Get the output. MyText contains the raw text. MyXML contains the parsed
+
+
+        }
+
+        function getStationsCallback() {
+            if (this.readyState == 4 && this.status == 200) {
+
+                let MyText = req.responseText;
+                let MyXML = req.responseXML;
+
+                processXML(MyXML);
+                // Placeholder <div> tag with which to attach the output.
+                let divStationsPlaceholder;
+                divStationsPlaceholder = document.getElementById("divStationsPlaceholder");
+
+                // There is one element in the returned XML named <credit>. Get the node's value.
+                // We are calling getElementsByTagName on the returned XML(), rather than the
+                // DOM object for our XML. They are different node trees.
+                //
+                // There is one <credit> node so credit[0] gets the first element from the
+                // node list.
+                let credit = MyXML.getElementsByTagName("credit");
+                divStationsPlaceholder.innerHTML = credit[0].innerHTML;
+
+                // Get the nodelist of <station> elements. There are several, and enumerate
+                // the list.
+                let stations = MyXML.getElementsByTagName("station");
+
+                // Create the unordered list.
+                let uList = document.createElement("ul");
+
+                for (x = 0; x < stations.length; x++) {
+                    let station = stations[x];
+
+                    // Create the parallel object list.
+
+                    // Build the string for the <station> children.
+                    let stationid = stations[x].getElementsByTagName("station_id")[0].innerHTML;
+                    let state = stations[x].getElementsByTagName("state")[0].innerHTML;
+                    let station_name = stations[x].getElementsByTagName("station_name")[0].innerHTML;
+                    let xml_url = stations[x].getElementsByTagName("xml_url")[0].innerHTML;
+
+                    let listItem = stationid + " (" + state + ") - " + station_name;
+
+                    // Create a list item and then create a textnode. Add the table
+                    // description (innerHTML) to the unordered list.
+                    let liCurrent = document.createElement("li");
+                    liCurrent.innerHTML = listItem;
+
+                    uList.appendChild(liCurrent);
+                }
+
+                // Append <ul> to the <div> tag.
+                divStationsPlaceholder.appendChild(uList);
+            }
+
+        }
+
+        function selStates_onChange() {
+            let selstates = document.getElementById("selStates");
+            let foo = selstates.value;
+            let foo1 = selstates.innerText;
+            let x = foo;
+        }
+
+    </script>
+</head>
+<body>
+    <h1>Get Weather Stations</h1>
+    <select id="selStates" onclick="selStates_onChange()">
+        <option value="AK">Arkansas</option>
+    </select>
+    <input type="button" onclick="btnNWSGetStationsSync_Click()"
+           value="Get Stations - XML - Sync" />
+
+    <br /><br />
+    <h1>Station List</h1>
+    <div id="divStationsPlaceholder"></div>
+    <h1>Footer</h1>
+</body>
+</html>
+
+<!-- 0
+        let req = XMLHttpRequest;
+        let stationList = [];
+        let station = { id: 'KAAA', url: 'http:\\for.bar' };
+        stationList.push(station);
+-->

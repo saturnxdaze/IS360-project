@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <title></title>
+    <link href="./css/global.css" rel="stylesheet" />
+
+    <script>
+        // Here is a reference to the service.
+        // https://w1.weather.gov/xml/current_obs
+
+        function btnNWSGetStationsAsync_Click() {
+            var base_uri = "https://w1.weather.gov/xml/current_obs/index.xml";
+            req = new XMLHttpRequest();
+
+            req.open("GET", base_uri, true);
+            req.setRequestHeader("Accept",
+                "text / html, application / xhtml + xml, application / xml; q = 0.9,*/*;q=0.8");
+            req.onreadystatechange = getStationsCallback;
+
+            req.send();
+        }
+
+        function getStationsCallback() {
+            if (this.readyState == 4 && this.status == 200) {
+
+                let MyText = req.responseText;
+                let MyXML = req.responseXML;
+
+                let divStationsPlaceholder;
+                divStationsPlaceholder = document.getElementById("divStationsPlaceholder");
+
+                let credit = MyXML.getElementsByTagName("credit");
+                divStationsPlaceholder.innerHTML = credit[0].innerHTML;
+
+                let stations = MyXML.getElementsByTagName("station");
+                let uList = document.createElement("ul");
+
+                for (x = 0; x < stations.length; x++) {
+                    let station = stations[x];
+
+                    let stationid = stations[x].getElementsByTagName("station_id")[0].innerHTML;
+                    let state = stations[x].getElementsByTagName("state")[0].innerHTML;
+                    let station_name = stations[x].getElementsByTagName("station_name")[0].innerHTML;
+                    let xml_url = stations[x].getElementsByTagName("xml_url")[0].innerHTML;
+
+                    let listItem = stationid + " (" + state + ") - " + station_name;
+
+                    let liCurrent = document.createElement("li");
+                    liCurrent.innerHTML = listItem;
+                    uList.appendChild(liCurrent);
+                }
+                divStationsPlaceholder.appendChild(uList);
+            }
+
+        }
+
+    </script>
+</head>
+<body>
+    <h1>Get Weather Stations</h1>
+
+    <input type="button" onclick="btnNWSGetStationsAsync_Click()"
+           value="Get Stations - XML - Sync" />
+
+    <br /><br />
+    <h1>Station List</h1>
+    <div id="divStationsPlaceholder"></div>
+    <h1>Footer</h1>
+</body>
+</html>
+<!-- 0 70  -->
